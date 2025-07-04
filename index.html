@@ -140,6 +140,19 @@
         html {
             scroll-behavior: smooth;
         }
+
+        #financialBreakdown {
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            overflow: hidden;
+            opacity: 0;
+            max-height: 0;
+        }
+
+        #financialBreakdown:not(.hidden) {
+            opacity: 1;
+            max-height: 500px; /* enough to show full table */
+        }
+
     </style>
 </head>
 <body class="overflow-x-hidden">
@@ -519,7 +532,7 @@
 
     <!-- Cabinet -->
     <div id="orderModal" class="fade-section fixed inset-0 z-[2000] bg-black/80 hidden justify-center items-center">
-        <div id="modalContent" class="bg-neutral-900 text-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-scroll p-6 relative opacity-0 scale-95 transition-all duration-300 ease-out no-scrollbar">
+        <div id="modalContent" class="bg-neutral-900 text-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 relative opacity-0 scale-95 transition-all duration-300 ease-out no-scrollbar">
             <button onclick="closeOrderModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">&times;</button>
             <h2 id="modalTitle" class="text-2xl font-bold mb-4">Order H2X Model</h2>
 
@@ -549,9 +562,47 @@
             </div>
 
             <!-- Pricing Details -->
-            <div class="bg-neutral-800 p-4 rounded mb-6">
+            <div class="bg-neutral-800 p-4 rounded mb-6 space-y-2">
                 <p class="text-gray-400 text-sm">Base Price:</p>
                 <p id="modalPrice" class="text-lg font-bold text-white">₱0.00</p>
+
+                <div id="installmentBreakdown" class="text-sm text-gray-400 space-y-1 hidden">
+                    <p><strong>Monthly Payment:</strong> <span id="monthlyAmount">—</span></p>
+                    <p><strong>Total Paid Over Term:</strong> <span id="totalAmount">—</span></p>
+                    <p class="flex items-start gap-1">
+                        <strong>Total Interest Paid:</strong>
+                        <span id="interestAmount">—</span>
+                        <span class="relative group">
+                            <span class="text-xs text-gray-400 cursor-pointer">ⓘ</span>
+                            <span class="absolute left-4 bottom-full mb-1 w-64 p-2 bg-neutral-800 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50">
+                                Installment plans over 12 months include interest charges to reflect fair lending terms and long-term risk. We aim to keep your financing honest and accessible.
+                            </span>
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <div class="mt-4">
+                <button onclick="toggleBreakdown()" class="text-sm text-sky-400 hover:underline focus:outline-none flex items-center gap-1">
+                    <span id="breakdownToggleText">Show Full Financial Breakdown</span>
+                    <span id="breakdownChevron">▼</span>
+                </button>
+
+                <div id="financialBreakdown" class="mt-2 hidden bg-neutral-800 p-4 rounded">
+                    <table class="w-full text-left text-sm text-gray-300">
+                        <thead>
+                            <tr class="border-b border-gray-700">
+                                <th class="pb-2">Plan</th>
+                                <th>Monthly</th>
+                                <th>Total Cost</th>
+                                <th>Interest</th>
+                            </tr>
+                        </thead>
+                        <tbody id="breakdownTable">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                    <p class="text-xs text-gray-500 mt-2">All values approximate. Final figures depend on partner lenders.</p>
+                </div>
             </div>
 
             <!-- Action Button -->
@@ -935,15 +986,54 @@
         }
 
         function updatePrice(basePrice, plan) {
-            let text = formatPesos(basePrice);
-            if (plan !== 'full') {
+            const modalPrice = document.getElementById('modalPrice');
+            const monthlyAmount = document.getElementById('monthlyAmount');
+            const totalAmount = document.getElementById('totalAmount');
+            const interestAmount = document.getElementById('interestAmount');
+            const breakdown = document.getElementById('installmentBreakdown');
+            const breakdownTable = document.getElementById('breakdownTable');
+
+            // Update visible top price
+            if (plan === 'full') {
+                modalPrice.innerText = formatPesos(basePrice);
+                breakdown.classList.add('hidden');
+            } else {
                 let months = parseInt(plan);
-                let monthly = basePrice / months;
-                if (plan === '24') monthly *= 1.05;
-                if (plan === '36') monthly *= 1.1;
-                text = `${formatPesos(Math.round(monthly))} / month`;
+                let interestRate = 0;
+                if (plan === '24') interestRate = 0.05;
+                if (plan === '36') interestRate = 0.10;
+
+                const totalCost = basePrice * (1 + interestRate);
+                const monthly = Math.round(totalCost / months);
+                const interest = totalCost - basePrice;
+
+                modalPrice.innerText = `${formatPesos(monthly)} / month`;
+                monthlyAmount.innerText = formatPesos(monthly);
+                totalAmount.innerText = formatPesos(Math.round(totalCost));
+                interestAmount.innerText = formatPesos(Math.round(interest));
+                breakdown.classList.remove('hidden');
             }
-            document.getElementById('modalPrice').innerText = text;
+
+            // Generate breakdown table
+            breakdownTable.innerHTML = '';
+            const plans = [
+                { label: '12 mo (0%)', months: 12, rate: 0 },
+                { label: '24 mo (5%)', months: 24, rate: 0.05 },
+                { label: '36 mo (10%)', months: 36, rate: 0.10 }
+            ];
+            plans.forEach(p => {
+                const total = basePrice * (1 + p.rate);
+                const monthly = total / p.months;
+                const interest = total - basePrice;
+                breakdownTable.innerHTML += `
+            <tr class="border-b border-gray-800">
+                <td class="py-1">${p.label}</td>
+                <td>${formatPesos(Math.round(monthly))}</td>
+                <td>${formatPesos(Math.round(total))}</td>
+                <td>${formatPesos(Math.round(interest))}</td>
+            </tr>
+        `;
+            });
         }
 
         function openOrderModal(model) {
@@ -982,6 +1072,19 @@
             modal.classList.add('hidden');
             modal.classList.remove('flex');
         }
+
+        function toggleBreakdown() {
+            const panel = document.getElementById('financialBreakdown');
+            const button = event.currentTarget;
+            const isHidden = panel.classList.contains('hidden');
+
+            panel.classList.toggle('hidden');
+
+            button.textContent = isHidden
+                ? 'Hide Financial Breakdown'
+                : 'Show Full Financial Breakdown';
+        }
+
         const engineSounds = {};
         let currentPlayingModel = null;
 
