@@ -122,6 +122,7 @@
                 transform: scale(1);
             }
         }
+
         #orderModal.flex #modalContent {
             opacity: 1;
             transform: scale(1);
@@ -158,7 +159,7 @@
             <a href="#motorsport" class="hover:text-sky-400">Motorsports</a>
             <a href="#contact" class="hover:text-sky-400">Contact</a>
         </nav>
-        <button class="bg-sky-500 hover:bg-sky-600 px-4 py-2 rounded-full">Reserve</button>
+        <button class="bg-sky-500 hover:bg-sky-600 px-4 py-2 rounded-full">Test Drive</button>
     </header>
 
     <!-- Showcase -->
@@ -237,12 +238,15 @@
                 </p>
                 <ul class="list-disc list-inside text-gray-300 mb-4">
                     <li>Range: 1000km</li>
-                    <li>0-100 km/h in 2.3s</li>
+                    <li>0-100 km/h in 4.8s</li>
                     <li>Sports-tuned suspension</li>
                     <li>Toyota Gazoo Racing collaboration</li>
                 </ul>
                 <p class="text-white font-semibold">Starting at ₱2.1M</p>
                 <button onclick="openOrderModal('siklab')" class="mt-4 bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6 py-3 rounded-full">Order Now</button>
+                <button onclick="toggleEngineSound('siklab')" class="mt-2 bg-neutral-800 hover:bg-neutral-700 text-white font-medium px-4 py-2 rounded-full">
+                    Hear the Engine
+                </button>
             </div>
         </div>
 
@@ -260,6 +264,9 @@
                 </ul>
                 <p class="text-white font-semibold">Starting at ₱1.7M</p>
                 <button onclick="openOrderModal('lakbay')" class="mt-4 bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6 py-3 rounded-full">Order Now</button>
+                <button onclick="toggleEngineSound('lakbay')" class="mt-2 bg-neutral-800 hover:bg-neutral-700 text-white font-medium px-4 py-2 rounded-full">
+                    Hear the Engine
+                </button>
             </div>
         </div>
 
@@ -277,6 +284,9 @@
                 </ul>
                 <p class="text-white font-semibold">Starting at ₱800K</p>
                 <button onclick="openOrderModal('bayan')" class="mt-4 bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6 py-3 rounded-full">Order Now</button>
+                <button onclick="toggleEngineSound('bayan')" class="mt-2 bg-neutral-800 hover:bg-neutral-700 text-white font-medium px-4 py-2 rounded-full">
+                    Hear the Engine
+                </button>
             </div>
         </div>
 
@@ -294,6 +304,9 @@
                 </ul>
                 <p class="text-white font-semibold">Starting at ₱1.0M</p>
                 <button onclick="openOrderModal('ulap')" class="mt-4 bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6 py-3 rounded-full">Order Now</button>
+                <button onclick="toggleEngineSound('ulap')" class="mt-2 bg-neutral-800 hover:bg-neutral-700 text-white font-medium px-4 py-2 rounded-full">
+                    Hear the Engine
+                </button>
             </div>
         </div>
 
@@ -355,23 +368,26 @@
         <h2 class="text-4xl font-bold mb-8">About Brahminy Motors</h2>
         <div class="max-w-4xl mx-auto text-lg leading-relaxed text-gray-300 space-y-6">
             <p>
-                Brahminy Motors was born from the desire to create a car that doesn't compromise—on emotion, sustainability, or affordability.
-                Our mission is simple: engineer hydro-electric vehicles that Filipinos can be proud of.
+                Brahminy Motors was born from a simple but powerful belief: that cars shouldn’t force us to choose between emotion, sustainability, or affordability. What began in the early 2010s as a quiet rebellion against gas-guzzling pollution has evolved into a bold movement for clean, soulful driving.
             </p>
             <p>
-                Designed and assembled locally, each H2X model blends cutting-edge tech with Filipino resilience and ingenuity.
-                We believe mobility should uplift communities, not pollute them.
+                In the early days, our engineers built concept vehicles aimed at redefining efficiency — but they never made it to the public. A lack of trust and investment held us back. That changed with new leadership and a renewed vision. We walked away from lifeless EV templates and greenwashed gas solutions, and turned instead to the most abundant resource on Earth: <strong>water</strong>.
             </p>
             <p>
-                In our journey toward a cleaner future, we've partnered with global pioneers like <strong>Toyota</strong> to bring
-                hydrogen power to Southeast Asia. Together, we're redefining what it means to drive clean.
+                That vision became the <strong>H2X Line</strong> — a family of hydrogen-electric vehicles powered by our proprietary H2GO system. Whether you're navigating the city, hitting the open road, or chasing performance, there's an H2X model built for you.
             </p>
-            <p class="text-white font-semibold">Made in the Philippines. Driven by purpose.</p>
+            <p>
+                Every Brahminy vehicle is proudly <strong>designed and assembled in the Philippines</strong>, fusing advanced global technologies with Filipino resilience and ingenuity. We're not just building cleaner cars — we're building a cleaner future.
+            </p>
+            <p>
+                With global pioneers like <strong>Toyota</strong> at our side, we're leading the charge to make hydrogen mobility not only real, but remarkable — built for Southeast Asia, and ready for the world.
+            </p>
+            <p class="text-white font-semibold">Made in the Philippines. Driven by purpose. Built for the world.</p>
         </div>
     </section>
     <!-- Collaboration -->
     <section id="collab" class="fade-section py-32 bg-black px-6 text-center">
-        <h2 class="text-4xl font-bold mb-6">Brahminy × Toyota</h2>
+        <h2 class="text-4xl font-bold mb-6">BRAHMINY × TOYOTA</h2>
         <p class="text-gray-400 max-w-3xl mx-auto mb-12 text-lg">
             A groundbreaking partnership merging Brahminy innovation with Toyota’s global excellence.
         </p>
@@ -380,14 +396,11 @@
             <img src="collab-cars.png" alt="Collaboration cars" class="w-full rounded-xl shadow-2xl" />
         </div>
 
-        <div class="max-w-4xl mx-auto text-left text-gray-300 space-y-4">
-            <h3 class="text-2xl font-semibold">Our Shared Mission</h3>
-            <ul class="list-disc pl-6 space-y-2">
-                <li>Co-develop a scalable hydrogen drivetrain for global EV markets</li>
-                <li>Achieve zero emissions without sacrificing driving thrill</li>
-                <li>Localize production in Southeast Asia using clean energy</li>
-                <li>Foster open innovation in next-gen fuel cell platforms</li>
-            </ul>
+        <div class="max-w-4xl mx-auto text-center text-gray-300 space-y-6">
+            <h3 class="text-2xl font-semibold">Brahminy Motors has partnered with Japanese automotive giant Toyota to pioneer a new era of clean, high-performance mobility.</h3>
+            <p class="text-lg">
+                This collaboration merges Brahminy’s bold hydrogen-electric innovations with Toyota’s renowned engineering heritage. Together, we’re co-developing next-generation drivetrains that deliver zero-emissions performance without compromising on power, range, or driving thrill — engineered for Southeast Asia, and designed for a global impact.
+            </p>
         </div>
 
         <div class="mt-10 text-center">
@@ -396,6 +409,7 @@
             </a>
         </div>
     </section>
+
     <!-- Motorsports -->
     <section id="motorsport"> </section>
     <section class="fade-section motorsport-division w-full bg-black py-16">
@@ -504,15 +518,19 @@
             <button onclick="closeOrderModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">&times;</button>
             <h2 id="modalTitle" class="text-2xl font-bold mb-4">Order H2X Model</h2>
 
+            <!-- Trim Selector -->
+            <div class="mb-4">
+                <label class="block text-sm mb-1 text-gray-400">Choose Trim</label>
+                <select id="trimSelect" class="w-full px-3 py-2 rounded bg-neutral-800 text-white"></select>
+            </div>
+
             <!-- Main Car Image -->
             <div class="mb-6">
                 <img id="modalImage1" src="" class="rounded-xl shadow-lg w-full h-auto object-cover" />
             </div>
 
             <!-- Specs and Description -->
-            <div id="modalSpecs" class="mb-6 text-gray-300 text-sm leading-relaxed space-y-2">
-                <!-- Filled dynamically -->
-            </div>
+            <div id="modalSpecs" class="mb-6 text-gray-300 text-sm leading-relaxed space-y-2"></div>
 
             <!-- Installment Plan Selector -->
             <div class="mb-6">
@@ -620,88 +638,254 @@
         const carData = {
             siklab: {
                 title: "Order H2X Siklab",
-                price: 2100000,
-                images: ["car-h2x.png"],
-                defaultPaint: "Racing Blue",
-                range: "1000km",
-                accel: "2.3s",
-                drive: "RWD",
-                specs: {
-                    suspension: "Race-tuned adaptive",
-                    transmission: "Seven-speed Sequential Stick gearbox",
-                    tires: "Michelin Pilot Sport 4S"
-                },
-                features: [
-                    "0–100 km/h in 2.3s",
-                    "Carbon-ceramic brakes",
-                    "1,200kg curb weight",
-                    "Track control system with drift mode",
-                    "Nürburgring Lap: 7:19"
+                trims: [
+                    {
+                        name: "Siklab",
+                        description: "Pure Hydro-electric performance coupe",
+                        price: 2100000,
+                        image: "car-h2x.png",
+                        range: "1000km",
+                        accel: "4.8",
+                        drive: "RWD",
+                        specs: {
+                            suspension: "Race-tuned adaptive",
+                            transmission: "Seven-speed Sequential Stick gearbox",
+                            tires: "Michelin Pilot Sport 4S"
+                        },
+                        features: [
+                            "0–100 km/h in 4.8s",
+                            "Carbon-ceramic brakes",
+                            "1,200kg curb weight",
+                            "Track control system with drift mode",
+                            "Nürburgring Lap: 8:43"
+                        ]
+                    },
+                    {
+                        name: "Siklab Premier",
+                        description: "Upgraded interior, adaptive suspension",
+                        price: 2400000,
+                        image: "car-h2x-P.png",
+                        range: "1000km",
+                        accel: "4.5s",
+                        drive: "RWD",
+                        specs: {
+                            suspension: "Active suspension with comfort/sport modes",
+                            transmission: "Dual Clutch Paddle Shifter",
+                            tires: "Michelin Pilot Sport 4S"
+                        },
+                        features: [
+                            "Heated Alcantara sport seats",
+                            "Dual 12-inch touchscreen displays",
+                            "Surround-view camera",
+                            "Upgraded audio system"
+                        ]
+                    },
+                    {
+                        name: "Siklab Apex-R",
+                        description: "Track-tuned by Brahminy Apex Racing",
+                        price: 3200000,
+                        image: "car-h2x-AR.png",
+                        range: "1000km",
+                        accel: "3.7s",
+                        drive: "RWD",
+                        specs: {
+                            suspension: "Track-honed ultra adaptive",
+                            transmission: "7-speed paddle-shifter",
+                            tires: "Pirelli P Zero Trofeo R"
+                        },
+                        features: [
+                            "0–100 km/h in 3.7s",
+                            "Active aero fins + diffuser + upgraded chassis & suspension",
+                            "Nürburgring Lap: 7:41",
+                            "Co-developed with B.A.R at Pampanga Speedway"
+                        ]
+                    }
                 ]
             },
             lakbay: {
                 title: "Order H2X Lakbay",
-                price: 1700000,
-                images: ["car-lakbay.png"],
-                defaultPaint: "Baja Bronze",
-                range: "1500km",
-                accel: null,
-                drive: "AWD",
-                specs: {
-                    suspension: "High-clearance hydro-adaptive",
-                    transmission: "Dual-range off-road capable",
-                    tires: "All-terrain Yokohama Geolandar"
-                },
-                features: [
-                    "Towing capacity: 2,000kg",
-                    "Cargo space: 1,500L",
-                    "Ground clearance: 240mm",
-                    "Selectable AWD / 4WD",
-                    "8-point crash safety system",
-                    "Built-in trail camera & off-road UI"
+                trims: [
+                    {
+                        name: "Lakbay",
+                        description: "Rugged AWD SUV",
+                        price: 1700000,
+                        image: "car-lakbay.png",
+                        range: "1500km",
+                        accel: "7.0s",
+                        drive: "AWD",
+                        specs: {
+                            suspension: "Off-road tuned adaptive suspension",
+                            transmission: "Multi-mode single-speed gearbox",
+                            tires: "Goodyear All-Terrain EV"
+                        },
+                        features: [
+                            "Hill descent control",
+                            "Roof rack with modular attachments",
+                            "360° terrain camera system"
+                        ]
+                    },
+                    {
+                        name: "Lakbay Premier",
+                        description: "Luxury add-ons, terrain assist",
+                        price: 2000000,
+                        image: "car-lakbay-P.png",
+                        range: "1500km",
+                        accel: "6.5s",
+                        drive: "AWD",
+                        specs: {
+                            suspension: "Adaptive comfort suspension",
+                            transmission: "Dual-mode electronic gearbox",
+                            tires: "Michelin CrossClimate EV"
+                        },
+                        features: [
+                            "Panoramic sunroof",
+                            "Leather-trimmed ventilated seats",
+                            "Terrain adaptive cruise control"
+                        ]
+                    },
+                    {
+                        name: "Lakbay Apex-X",
+                        description: "Rally-tuned suspension, B.A.R upgrades",
+                        price: 2400000,
+                        image: "car-lakbay-AR.png",
+                        range: "1500km",
+                        accel: "6.0s",
+                        drive: "AWD",
+                        specs: {
+                            suspension: "B.A.R rally-tuned dampers",
+                            transmission: "8-speed torque-vectoring system",
+                            tires: "BFGoodrich Trail-Terrain T/A"
+                        },
+                        features: [
+                            "B.A.R co-developed drivetrain",
+                            "Reinforced underbody armor",
+                            "Performance rally mode"
+                        ]
+                    }
                 ]
             },
             bayan: {
                 title: "Order H2X Bayan",
-                price: 800000,
-                images: ["car-bayan.png"],
-                defaultPaint: "Midnight Blue",
-                range: "750km",
-                accel: null,
-                drive: "FWD",
-                specs: {
-                    suspension: "Comfort-optimized",
-                    transmission: "Single-speed EV drive",
-                    tires: "EcoGrip city radials"
-                },
-                features: [
-                    "5-star ASEAN NCAP safety rating",
-                    "Full driver-assist suite (adaptive cruise, lane keep)",
-                    "Steel-reinforced crash zones",
-                    "Rear parking camera with AI assistance",
-                    "Low maintenance, modular components"
+                trims: [
+                    {
+                        name: "Bayan",
+                        description: "Practical city car",
+                        price: 800000,
+                        image: "car-bayan.png",
+                        range: "750km",
+                        accel: "9.0s",
+                        drive: "FWD",
+                        specs: {
+                            suspension: "Standard front strut / torsion beam rear",
+                            transmission: "Single-speed automatic",
+                            tires: "EcoContact EV"
+                        },
+                        features: [
+                            "Compact 4-door layout",
+                            "Rear parking sensors",
+                            "Smartphone integration (Apple/Android)"
+                        ]
+                    },
+                    {
+                        name: "Bayan Plus",
+                        description: "Smoother suspension, better infotainment",
+                        price: 950000,
+                        image: "car-bayan-P.png",
+                        range: "750km",
+                        accel: "8.5s",
+                        drive: "FWD",
+                        specs: {
+                            suspension: "Enhanced comfort dampers",
+                            transmission: "Eco-tuned single-speed",
+                            tires: "Michelin e.Primacy"
+                        },
+                        features: [
+                            "8-inch infotainment with voice control",
+                            "Keyless entry and push-start",
+                            "Rear camera with guide lines"
+                        ]
+                    },
+                    {
+                        name: "Bayan Sport",
+                        description: "Race Suspension, Aero Parts",
+                        price: 1100000,
+                        image: "car-bayan-AR.png",
+                        range: "750km",
+                        accel: "7.2s",
+                        drive: "FWD",
+                        specs: {
+                            suspension: "Lowered sport suspension",
+                            transmission: "Regen-enabled paddle shift",
+                            tires: "Pilot Sport EV"
+                        },
+                        features: [
+                            "Front splitter, rear spoiler",
+                            "Red brake calipers",
+                            "Sport display cluster"
+                        ]
+                    }
                 ]
             },
             ulap: {
                 title: "Order H2X Ulap",
-                price: 1000000,
-                images: ["car-ulap.png"],
-                defaultPaint: "Pearl White",
-                range: "750km",
-                accel: null,
-                drive: "AWD",
-                specs: {
-                    suspension: "Active float-drive suspension",
-                    transmission: "Smooth dual-motor sync drive",
-                    tires: "Continental LuxuryTour"
-                },
-                features: [
-                    "Active float-drive suspension",
-                    "16-speaker 3D surround sound",
-                    "Auto climate and ambient lighting",
-                    "Smart drive modes (Comfort / Sport / Auto)",
-                    "Panoramic glass roof and large legroom",
-                    "Underfloor cargo storage"
+                trims: [
+                    {
+                        name: "Ulap",
+                        description: "Comfort crossover",
+                        price: 1000000,
+                        image: "car-ulap.png",
+                        range: "750km",
+                        accel: "8.2s",
+                        drive: "AWD",
+                        specs: {
+                            suspension: "Comfort tuned suspension",
+                            transmission: "Single-speed AWD",
+                            tires: "Bridgestone Turanza EV"
+                        },
+                        features: [
+                            "Wide interior space",
+                            "Wireless phone charger",
+                            "Pre-collision assist"
+                        ]
+                    },
+                    {
+                        name: "Ulap Premier",
+                        description: "Luxury seating, AI comfort",
+                        price: 1300000,
+                        image: "car-ulap-P.png",
+                        range: "750km",
+                        accel: "7.8s",
+                        drive: "AWD",
+                        specs: {
+                            suspension: "Dual-mode AI suspension",
+                            transmission: "EcoComfort gearbox",
+                            tires: "Continental PremiumContact EV"
+                        },
+                        features: [
+                            "AI-adjusted cabin temperature",
+                            "Memory foam seats",
+                            "Rear recline function"
+                        ]
+                    },
+                    {
+                        name: "Ulap Apex-Luxe",
+                        description: "B.A.R-tuned comfort, Apex dampers",
+                        price: 1600000,
+                        image: "car-ulap-AR.png",
+                        range: "750km",
+                        accel: "7.2s",
+                        drive: "AWD",
+                        specs: {
+                            suspension: "Apex Adaptive Dampers tuned by B.A.R",
+                            transmission: "WhisperShift eCVT",
+                            tires: "Pirelli Cinturato P7"
+                        },
+                        features: [
+                            "Silence-focused NVH insulation",
+                            "Massage front seats",
+                            "Pampanga Tuned Drive Mode"
+                        ]
+                    }
                 ]
             }
         };
@@ -710,48 +894,45 @@
             return `₱${num.toLocaleString()}`;
         }
 
+        function updatePrice(basePrice, plan) {
+            let text = formatPesos(basePrice);
+            if (plan !== 'full') {
+                let months = parseInt(plan);
+                let monthly = basePrice / months;
+                if (plan === '24') monthly *= 1.05;
+                if (plan === '36') monthly *= 1.1;
+                text = `${formatPesos(Math.round(monthly))} / month`;
+            }
+            document.getElementById('modalPrice').innerText = text;
+        }
+
         function openOrderModal(model) {
             const modal = document.getElementById('orderModal');
             const data = carData[model];
-
-            document.getElementById('modalTitle').innerText = data.title;
-            document.getElementById('modalImage1').src = data.images[0];
-
-            document.getElementById('modalSpecs').innerHTML = `
-        <p><strong>Range:</strong> ${data.range}</p>
-        ${data.accel ? `<p><strong>0-100 km/h:</strong> ${data.accel}</p>` : ''}
-        <p><strong>Drive Type:</strong> ${data.drive}</p>
-        <p><strong>Suspension:</strong> ${data.specs.suspension}</p>
-        <p><strong>Transmission:</strong> ${data.specs.transmission}</p>
-        <p><strong>Tires:</strong> ${data.specs.tires}</p>
-`;
-
-            const featuresList = data.features.map(item => `<li>• ${item}</li>`).join('');
-            document.getElementById('modalSpecs').innerHTML += `
-        <ul class="mt-4 space-y-1 text-sm text-gray-400">${featuresList}</ul>
-`;
-
-            const priceDisplay = document.getElementById('modalPrice');
+            const trimSelect = document.getElementById('trimSelect');
             const planSelect = document.getElementById('installmentPlan');
 
-            function updatePrice() {
-                const plan = planSelect.value;
-                let text = formatPesos(data.price);
+            trimSelect.innerHTML = data.trims.map((trim, i) => `<option value="${i}">${trim.name} — ${trim.description}</option>`).join('');
 
-                if (plan !== 'full') {
-                    let months = parseInt(plan);
-                    let monthly = data.price / months;
-                    if (plan === '24') monthly *= 1.05;
-                    if (plan === '36') monthly *= 1.1;
-                    text = `${formatPesos(Math.round(monthly))} / month`;
-                }
-
-                priceDisplay.innerText = text;
+            function renderTrim(index) {
+                const trim = data.trims[index];
+                document.getElementById('modalTitle').innerText = `${data.title} – ${trim.name}`;
+                document.getElementById('modalImage1').src = trim.image;
+                document.getElementById('modalSpecs').innerHTML = `
+          <p><strong>Range:</strong> ${trim.range}</p>
+          ${trim.accel ? `<p><strong>0-100 km/h:</strong> ${trim.accel}</p>` : ''}
+          <p><strong>Drive Type:</strong> ${trim.drive}</p>
+          <p><strong>Suspension:</strong> ${trim.specs.suspension}</p>
+          <p><strong>Transmission:</strong> ${trim.specs.transmission}</p>
+          <p><strong>Tires:</strong> ${trim.specs.tires}</p>
+          <ul class="mt-4 space-y-1 text-sm text-gray-400">${trim.features.map(f => `<li>• ${f}</li>`).join('')}</ul>`;
+                updatePrice(trim.price, planSelect.value);
             }
 
-            planSelect.onchange = updatePrice;
-            updatePrice();
+            trimSelect.onchange = () => renderTrim(parseInt(trimSelect.value));
+            planSelect.onchange = () => renderTrim(parseInt(trimSelect.value));
 
+            renderTrim(0);
             modal.classList.remove('hidden');
             modal.classList.add('flex');
         }
@@ -760,6 +941,32 @@
             const modal = document.getElementById('orderModal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
+        }
+        const engineSounds = {};
+        let currentPlayingModel = null;
+
+        function toggleEngineSound(model) {
+            // Pause currently playing sound if it's not the same
+            if (currentPlayingModel && currentPlayingModel !== model) {
+                engineSounds[currentPlayingModel]?.pause();
+                engineSounds[currentPlayingModel].currentTime = 0;
+            }
+
+            // Load if not loaded yet
+            if (!engineSounds[model]) {
+                engineSounds[model] = new Audio(`${model}-sound.mp3`);
+            }
+
+            const audio = engineSounds[model];
+
+            if (audio.paused) {
+                audio.play();
+                currentPlayingModel = model;
+            } else {
+                audio.pause();
+                audio.currentTime = 0;
+                currentPlayingModel = null;
+            }
         }
     </script>
 
