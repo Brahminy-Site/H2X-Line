@@ -142,17 +142,42 @@
         }
 
         #financialBreakdown {
-            transition: max-height 0.3s ease, opacity 0.3s ease;
             overflow: hidden;
-            opacity: 0;
+            transition: all 0.3s ease;
             max-height: 0;
+            opacity: 0;
         }
 
-        #financialBreakdown:not(.hidden) {
-            opacity: 1;
-            max-height: 500px; /* enough to show full table */
+        #financialBreakdown.show {
+                max-height: 500px;
+                opacity: 1;
         }
 
+        .model-card {
+            cursor: pointer;
+            border: 2px solid transparent;
+            padding: 0.25rem;
+            border-radius: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+            .model-card:hover {
+                border-color: #38bdf8; /* sky-400 */
+                transform: scale(1.05);
+            }
+
+            .model-card.selected {
+                border-color: #0ea5e9; /* sky-500 */
+                background-color: #1e293b; /* bg-slate-800 */
+            }
+        .scrollbar-hidden::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scrollbar-hidden {
+            -ms-overflow-style: none; /* IE 10+ */
+            scrollbar-width: none; /* Firefox */
+        }
     </style>
 </head>
 <body class="overflow-x-hidden">
@@ -581,59 +606,116 @@
                     </p>
                 </div>
             </div>
-            <div class="mt-4">
-                <button onclick="toggleBreakdown()" class="text-sm text-sky-400 hover:underline focus:outline-none flex items-center gap-1">
-                    <span id="breakdownToggleText">Show Full Financial Breakdown</span>
-                    <span id="breakdownChevron">▼</span>
-                </button>
-
-                <div id="financialBreakdown" class="mt-2 hidden bg-neutral-800 p-4 rounded">
-                    <table class="w-full text-left text-sm text-gray-300">
-                        <thead>
-                            <tr class="border-b border-gray-700">
-                                <th class="pb-2">Plan</th>
-                                <th>Monthly</th>
-                                <th>Total Cost</th>
-                                <th>Interest</th>
-                            </tr>
-                        </thead>
-                        <tbody id="breakdownTable">
-                            <!-- Populated dynamically -->
-                        </tbody>
-                    </table>
-                    <p class="text-xs text-gray-500 mt-2">All values approximate. Final figures depend on partner lenders.</p>
+            <div id="dealershipBreakdown" class="bg-neutral-800 mt-6 p-4 rounded space-y-3 text-sm text-gray-300">
+                <div>
+                    <label for="downSlider" class="block text-sm text-gray-400 mb-1">Downpayment (% of base price)</label>
+                    <input id="downSlider" type="range" min="0" max="50" value="20" step="5" class="w-full">
+                    <p class="text-xs text-gray-400 mt-1"><span id="downAmount">0</span> (<span id="downPercentText">20%</span>)</p>
                 </div>
+
+                <div class="space-y-1">
+                    <p>Loan Amount: <span class="font-semibold text-white" id="loanAmount">₱0</span></p>
+                    <p>Estimated Interest: <span id="legalInterest">₱0</span></p>
+                    <p>Estimated Fees: <span id="legalFees">₱17,000</span></p>
+                    <p>Estimated Insurance (per year): <span id="legalInsurance">₱45,000</span></p>
+                </div>
+
+                <hr class="border-gray-700">
+
+                <div class="font-semibold">
+                    <p class="text-white">Estimated Total Cost to Own: <span id="ownershipTotal" class="text-sky-400">₱0</span></p>
+                </div>
+
+                <p class="text-xs text-gray-500">* Estimated insurance is calculated for 3 years. All amounts are approximate and subject to lender and regional regulations.</p>
             </div>
 
-            <!-- Action Button -->
-            <button class="w-full bg-sky-600 hover:bg-sky-700 px-6 py-3 rounded-full font-semibold">Proceed to Customization</button>
+            <div class="mt-4">
+                <button onclick="toggleBreakdown()" class="text-sm text-sky-400 hover:underline flex items-center gap-1">
+                    <span id="breakdownToggleLabel">Show Included Value Breakdown</span>
+                    <svg id="breakdownToggleIcon" class="w-4 h-4 transform transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2"
+                         viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+
+                <!-- Collapsible Section -->
+                <div id="financialBreakdownWrapper" class="overflow-hidden transition-all duration-300" style="max-height: 0; opacity: 0;">
+                    <div class="mt-2 bg-neutral-800 p-4 rounded text-sm text-gray-300">
+                        <h3 class="text-white text-lg font-semibold mb-2">Included Value Breakdown</h3>
+                        <ul id="featuresList" class="space-y-1"></ul>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm mb-2 text-gray-400">Choose Dealer</label>
+                    <select id="dealerSelect" class="w-full px-3 py-2 rounded bg-neutral-800 text-white">
+                        <option value="">Select your preferred dealership</option>
+                        <option>Quezon City - Brahminy Main Showroom</option>
+                        <option>Taguig - Uptown Autohaus</option>
+                        <option>Cebu - South District Hub</option>
+                        <option>Davao - Brahminy Premier</option>
+                        <option>Batangas - Lipa Dealership Center</option>
+                        <option>La Union - Coastal Regional Dealer</option>
+                        <option>Baguio - Highland AutoMall</option>
+                        <option>Zamboanga - Mindanao North Point</option>
+                    </select>
+                </div>
+
+                <!-- Action Button -->
+                <button class="w-full bg-sky-600 hover:bg-sky-700 px-6 py-3 rounded-full font-semibold">Proceed to Customization</button>
+            </div>
         </div>
     </div>
 
-    <!-- Test Drive Modal -->
+    <!-- Simplified Test Drive Modal with Hero Image Model Chooser -->
     <div id="testDriveModal" class="fade-section fixed inset-0 z-[2000] bg-black/80 hidden justify-center items-center">
-        <div class="bg-neutral-900 text-white rounded-2xl max-w-xl w-full p-6 relative opacity-0 scale-95 transition-all duration-300 ease-out">
+        <div class="bg-neutral-900 text-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-10 relative opacity-0 scale-95 transition-all duration-300 ease-out scrollbar-hidden">
             <button onclick="closeTestDriveModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl">&times;</button>
-            <h2 class="text-3xl font-bold mb-2">Book a Test Drive</h2>
-            <p class="text-gray-400 mb-6">Let us bring the thrill of hydrogen mobility closer to you.</p>
-            <form onsubmit="submitTestDrive(event)" class="space-y-4">
+            <h2 class="text-3xl font-bold mb-6">Book a Test Drive</h2>
+
+            <form onsubmit="submitTestDrive(event)" class="space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <input type="text" placeholder="Full Name" required class="w-full px-4 py-3 rounded bg-neutral-800 text-white placeholder-gray-500" />
                     <input type="tel" placeholder="Mobile Number" required class="w-full px-4 py-3 rounded bg-neutral-800 text-white placeholder-gray-500" />
                     <input type="email" placeholder="Email Address" required class="w-full px-4 py-3 rounded bg-neutral-800 text-white placeholder-gray-500" />
                     <input type="text" placeholder="Your City / Location" required class="w-full px-4 py-3 rounded bg-neutral-800 text-white placeholder-gray-500" />
                 </div>
-                <select required class="w-full px-4 py-3 rounded bg-neutral-800 text-white">
-                    <option value="">Select Model</option>
-                    <option>H2X Siklab</option>
-                    <option>H2X Lakbay</option>
-                    <option>H2X Bayan</option>
-                    <option>H2X Ulap</option>
-                </select>
+
+                <div class="space-y-2 text-center">
+                    <label class="text-sm text-gray-400 block mb-1">Choose Model</label>
+                    <div class="relative">
+                        <div class="flex justify-center items-center mb-2">
+                            <button type="button" onclick="prevModel()" class="text-white px-3 py-1 rounded-full text-2xl">&#8592;</button>
+                            <h3 id="modelName" class="mx-4 text-xl font-semibold"></h3>
+                            <button type="button" onclick="nextModel()" class="text-white px-3 py-1 rounded-full text-2xl">&#8594;</button>
+                        </div>
+                        <div class="flex justify-center">
+                            <img id="modelHeroImage" src="" alt="Selected Model" class="rounded-2xl w-full max-w-2xl transition-opacity duration-500 ease-in-out opacity-0" onload="this.style.opacity='1'" />
+                        </div>
+                        <input type="hidden" id="selectedModel" name="selectedModel" />
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-2 gap-4">
                     <input type="date" required class="w-full px-4 py-3 rounded bg-neutral-800 text-white" />
                     <input type="time" required class="w-full px-4 py-3 rounded bg-neutral-800 text-white" />
                 </div>
+
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">Preferred Dealer</label>
+                    <select required class="w-full px-4 py-3 rounded bg-neutral-800 text-white">
+                        <option value="">Choose a dealer</option>
+                        <option>Quezon City - Brahminy Main Showroom</option>
+                        <option>Taguig - Uptown Autohaus</option>
+                        <option>Cebu - South District Hub</option>
+                        <option>Davao - Brahminy Premier</option>
+                        <option>Batangas - Lipa Dealership Center</option>
+                        <option>La Union - Coastal Regional Dealer</option>
+                        <option>Baguio - Highland AutoMall</option>
+                        <option>Zamboanga - Mindanao North Point</option>
+                    </select>
+                </div>
+
                 <textarea placeholder="Additional Notes (optional)" rows="3" class="w-full px-4 py-3 rounded bg-neutral-800 text-white placeholder-gray-500"></textarea>
                 <button type="submit" class="w-full bg-sky-600 hover:bg-sky-700 px-6 py-3 rounded-full font-semibold">Submit Request</button>
             </form>
@@ -726,6 +808,7 @@
         });
 
         // ✅ Modal Logic
+        // ✅ Modal Logic
         const carData = {
             siklab: {
                 title: "Order H2X Siklab",
@@ -749,6 +832,13 @@
                             "1,200kg curb weight",
                             "Track control system with drift mode",
                             "Nürburgring Lap: 8:43"
+                        ],
+                        includedFeatures: [
+                            { name: "Base Car", cost: 1900000 },
+                            { name: "Paint Job", cost: 25000 },
+                            { name: "Race Suspension", cost: 45000 },
+                            { name: "Performance Tires", cost: 35000 },
+                            { name: "3-Year Maintenance Plan", cost: 0 }
                         ]
                     },
                     {
@@ -769,6 +859,14 @@
                             "Dual 12-inch touchscreen displays",
                             "Surround-view camera",
                             "Upgraded audio system"
+                        ],
+                        includedFeatures: [
+                            { name: "Base Car", cost: 1900000 },
+                            { name: "Paint Job", cost: 25000 },
+                            { name: "Luxury Interior Upgrade", cost: 60000 },
+                            { name: "Comfort+ Active Suspension", cost: 55000 },
+                            { name: "Touchscreen Upgrade", cost: 40000 },
+                            { name: "3-Year Maintenance Plan", cost: 0 }
                         ]
                     },
                     {
@@ -789,6 +887,15 @@
                             "Active aero fins + diffuser + upgraded chassis & suspension",
                             "Nürburgring Lap: 7:41",
                             "Co-developed with B.A.R at Pampanga Speedway"
+                        ],
+                        includedFeatures: [
+                            { name: "Base Car", cost: 1900000 },
+                            { name: "Paint Job", cost: 25000 },
+                            { name: "Apex R Bodykit", cost: 85000 },
+                            { name: "Track Aero + Diffuser", cost: 60000 },
+                            { name: "Ultra Suspension + Tires", cost: 90000 },
+                            { name: "B.A.R Co-dev Tuning", cost: 70000 },
+                            { name: "3-Year Maintenance Plan", cost: 0 }
                         ]
                     }
                 ]
@@ -813,6 +920,13 @@
                             "Hill descent control",
                             "Roof rack with modular attachments",
                             "360° terrain camera system"
+                        ],
+                        includedFeatures: [
+                            { name: "Base Car", cost: 1550000 },
+                            { name: "Paint Job", cost: 25000 },
+                            { name: "Skid Plate Armor", cost: 40000 },
+                            { name: "Roof Rails + Rack", cost: 20000 },
+                            { name: "3-Year Maintenance Plan", cost: 0 }
                         ]
                     },
                     {
@@ -832,6 +946,14 @@
                             "Panoramic sunroof",
                             "Leather-trimmed ventilated seats",
                             "Terrain adaptive cruise control"
+                        ],
+                        includedFeatures: [
+                            { name: "Base Car", cost: 1550000 },
+                            { name: "Paint Job", cost: 25000 },
+                            { name: "Sunroof", cost: 25000 },
+                            { name: "Leather Ventilated Seats", cost: 35000 },
+                            { name: "Adaptive Cruise Assist", cost: 28000 },
+                            { name: "3-Year Maintenance Plan", cost: 0 }
                         ]
                     },
                     {
@@ -851,6 +973,14 @@
                             "B.A.R co-developed drivetrain",
                             "Reinforced underbody armor",
                             "Performance rally mode"
+                        ],
+                        includedFeatures: [
+                            { name: "Base Car", cost: 1550000 },
+                            { name: "Paint Job", cost: 25000 },
+                            { name: "Rally Dampers", cost: 60000 },
+                            { name: "Skid Plate Armor", cost: 40000 },
+                            { name: "B.A.R Co-dev Tuning", cost: 70000 },
+                            { name: "3-Year Maintenance Plan", cost: 0 }
                         ]
                     }
                 ]
@@ -875,6 +1005,12 @@
                             "Compact 4-door layout",
                             "Rear parking sensors",
                             "Smartphone integration (Apple/Android)"
+                        ],
+                        includedFeatures: [
+                            { name: "Base Car", cost: 720000 },
+                            { name: "Paint Job", cost: 25000 },
+                            { name: "Rear Camera", cost: 15000 },
+                            { name: "3-Year Maintenance Plan", cost: 0 }
                         ]
                     },
                     {
@@ -894,6 +1030,13 @@
                             "8-inch infotainment with voice control",
                             "Keyless entry and push-start",
                             "Rear camera with guide lines"
+                        ],
+                        includedFeatures: [
+                            { name: "Base Car", cost: 720000 },
+                            { name: "Paint Job", cost: 25000 },
+                            { name: "8-inch Infotainment", cost: 20000 },
+                            { name: "Rear Camera", cost: 15000 },
+                            { name: "3-Year Maintenance Plan", cost: 0 }
                         ]
                     },
                     {
@@ -913,6 +1056,14 @@
                             "Front splitter, rear spoiler",
                             "Red brake calipers",
                             "Sport display cluster"
+                        ],
+                        includedFeatures: [
+                            { name: "Base Car", cost: 720000 },
+                            { name: "Paint Job", cost: 25000 },
+                            { name: "Sport Suspension", cost: 30000 },
+                            { name: "Spoiler", cost: 20000 },
+                            { name: "Carbon Hood", cost: 40000 },
+                            { name: "3-Year Maintenance Plan", cost: 0 }
                         ]
                     }
                 ]
@@ -937,6 +1088,13 @@
                             "Wide interior space",
                             "Wireless phone charger",
                             "Pre-collision assist"
+                        ],
+                        includedFeatures: [
+                            { name: "Base Car", cost: 900000 },
+                            { name: "Paint Job", cost: 25000 },
+                            { name: "AI Assistant", cost: 8000 },
+                            { name: "Pre-collision Assist", cost: 10000 },
+                            { name: "3-Year Maintenance Plan", cost: 0 }
                         ]
                     },
                     {
@@ -956,6 +1114,14 @@
                             "AI-adjusted cabin temperature",
                             "Memory foam seats",
                             "Rear recline function"
+                        ],
+                        includedFeatures: [
+                            { name: "Base Car", cost: 900000 },
+                            { name: "Paint Job", cost: 25000 },
+                            { name: "Massage Seats", cost: 35000 },
+                            { name: "AI Comfort System", cost: 25000 },
+                            { name: "Rear Recliner Function", cost: 18000 },
+                            { name: "3-Year Maintenance Plan", cost: 0 }
                         ]
                     },
                     {
@@ -975,6 +1141,14 @@
                             "Silence-focused NVH insulation",
                             "Massage front seats",
                             "Pampanga Tuned Drive Mode"
+                        ],
+                        includedFeatures: [
+                            { name: "Base Car", cost: 900000 },
+                            { name: "Paint Job", cost: 25000 },
+                            { name: "Massage Seats", cost: 35000 },
+                            { name: "Apex Dampers by B.A.R", cost: 55000 },
+                            { name: "NVH Insulation", cost: 18000 },
+                            { name: "3-Year Maintenance Plan", cost: 0 }
                         ]
                     }
                 ]
@@ -993,13 +1167,15 @@
             const breakdown = document.getElementById('installmentBreakdown');
             const breakdownTable = document.getElementById('breakdownTable');
 
-            // Update visible top price
+            let months = 0;
+            let interestRate = 0;
+
             if (plan === 'full') {
                 modalPrice.innerText = formatPesos(basePrice);
                 breakdown.classList.add('hidden');
+                updateDealershipBreakdown(basePrice, 0, 0);
             } else {
-                let months = parseInt(plan);
-                let interestRate = 0;
+                months = parseInt(plan);
                 if (plan === '24') interestRate = 0.05;
                 if (plan === '36') interestRate = 0.10;
 
@@ -1012,28 +1188,57 @@
                 totalAmount.innerText = formatPesos(Math.round(totalCost));
                 interestAmount.innerText = formatPesos(Math.round(interest));
                 breakdown.classList.remove('hidden');
+                updateDealershipBreakdown(basePrice, months, interestRate);
+
+                // generate breakdown table
+                const breakdownTable = document.getElementById('breakdownTable');
+                breakdownTable.innerHTML = '';
+
+                const plans = [
+                    { label: '12 mo (0%)', months: 12, rate: 0 },
+                    { label: '24 mo (5%)', months: 24, rate: 0.05 },
+                    { label: '36 mo (10%)', months: 36, rate: 0.10 }
+                ];
+
+                plans.forEach(p => {
+                    const total = basePrice * (1 + p.rate);
+                    const monthly = total / p.months;
+                    const interest = total - basePrice;
+
+                    breakdownTable.innerHTML += `
+                                <tr class="border-b border-gray-800">
+                                <td class="py-1">${p.label}</td>
+                                <td>${formatPesos(Math.round(monthly))}</td>
+                                <td>${formatPesos(Math.round(total))}</td>
+                                <td>${formatPesos(Math.round(interest))}</td>
+                                </tr>
+              `;
+                });
+
+
+
             }
 
-            // Generate breakdown table
-            breakdownTable.innerHTML = '';
-            const plans = [
-                { label: '12 mo (0%)', months: 12, rate: 0 },
-                { label: '24 mo (5%)', months: 24, rate: 0.05 },
-                { label: '36 mo (10%)', months: 36, rate: 0.10 }
-            ];
-            plans.forEach(p => {
-                const total = basePrice * (1 + p.rate);
-                const monthly = total / p.months;
-                const interest = total - basePrice;
-                breakdownTable.innerHTML += `
-            <tr class="border-b border-gray-800">
-                <td class="py-1">${p.label}</td>
-                <td>${formatPesos(Math.round(monthly))}</td>
-                <td>${formatPesos(Math.round(total))}</td>
-                <td>${formatPesos(Math.round(interest))}</td>
-            </tr>
-        `;
-            });
+        }
+        function updateDealershipBreakdown(basePrice, months, interestRate) {
+            const downSlider = document.getElementById('downSlider');
+            const downPercent = parseInt(downSlider.value);
+            const downAmount = Math.round(basePrice * (downPercent / 100));
+            const loanAmount = basePrice - downAmount;
+
+            const legalInterest = Math.round(loanAmount * interestRate);
+            const legalFees = 17000;
+            const insurancePerYear = 45000;
+            const insuranceTotal = insurancePerYear * Math.ceil(months / 12);
+            const ownershipTotal = basePrice + legalInterest + legalFees + insuranceTotal;
+
+            document.getElementById('downAmount').innerText = formatPesos(downAmount);
+            document.getElementById('downPercentText').innerText = `${downPercent}%`;
+            document.getElementById('loanAmount').innerText = formatPesos(loanAmount);
+            document.getElementById('legalInterest').innerText = formatPesos(legalInterest);
+            document.getElementById('legalFees').innerText = formatPesos(legalFees);
+            document.getElementById('legalInsurance').innerText = formatPesos(insurancePerYear);
+            document.getElementById('ownershipTotal').innerText = formatPesos(ownershipTotal);
         }
 
         function openOrderModal(model) {
@@ -1049,14 +1254,27 @@
                 document.getElementById('modalTitle').innerText = `${data.title} – ${trim.name}`;
                 document.getElementById('modalImage1').src = trim.image;
                 document.getElementById('modalSpecs').innerHTML = `
-                  <p><strong>Range:</strong> ${trim.range}</p>
-                  ${trim.accel ? `<p><strong>0-100 km/h:</strong> ${trim.accel}</p>` : ''}
-                  <p><strong>Drive Type:</strong> ${trim.drive}</p>
-                  <p><strong>Suspension:</strong> ${trim.specs.suspension}</p>
-                  <p><strong>Transmission:</strong> ${trim.specs.transmission}</p>
-                  <p><strong>Tires:</strong> ${trim.specs.tires}</p>
-                  <ul class="mt-4 space-y-1 text-sm text-gray-400">${trim.features.map(f => `<li>• ${f}</li>`).join('')}</ul>`;
+                              <p><strong>Range:</strong> ${trim.range}</p>
+                              ${trim.accel ? `<p><strong>0-100 km/h:</strong> ${trim.accel}</p>` : ''}
+                              <p><strong>Drive Type:</strong> ${trim.drive}</p>
+                              <p><strong>Suspension:</strong> ${trim.specs.suspension}</p>
+                              <p><strong>Transmission:</strong> ${trim.specs.transmission}</p>
+                              <p><strong>Tires:</strong> ${trim.specs.tires}</p>
+                              <ul class="mt-4 space-y-1 text-sm text-gray-400">${trim.features.map(f => `<li>• ${f}</li>`).join('')}</ul>`;
                 updatePrice(trim.price, planSelect.value);
+
+                // Populate included features breakdown
+                const featuresList = document.getElementById('featuresList');
+                featuresList.innerHTML = '';
+
+                trim.includedFeatures.forEach(feature => {
+                    featuresList.innerHTML += `
+                                <li class="flex justify-between">
+                                <span>✓ ${feature.name}</span>
+                                <span class="text-white font-medium">${formatPesos(feature.cost)}</span>
+                                </li>`;
+                });
+
             }
 
             trimSelect.onchange = () => renderTrim(parseInt(trimSelect.value));
@@ -1074,16 +1292,54 @@
         }
 
         function toggleBreakdown() {
-            const panel = document.getElementById('financialBreakdown');
-            const button = event.currentTarget;
-            const isHidden = panel.classList.contains('hidden');
+            const wrapper = document.getElementById('financialBreakdownWrapper');
+            const label = document.getElementById('breakdownToggleLabel');
+            const icon = document.getElementById('breakdownToggleIcon');
 
-            panel.classList.toggle('hidden');
+            const isOpen = wrapper.style.maxHeight && wrapper.style.maxHeight !== "0px";
 
-            button.textContent = isHidden
-                ? 'Hide Financial Breakdown'
-                : 'Show Full Financial Breakdown';
+            if (isOpen) {
+                wrapper.style.maxHeight = "0";
+                wrapper.style.opacity = "0";
+                label.textContent = "Show Included Value Breakdown";
+                icon.classList.remove("rotate-180");
+            } else {
+                const scrollHeight = wrapper.scrollHeight + "px";
+                wrapper.style.maxHeight = scrollHeight;
+                wrapper.style.opacity = "1";
+                label.textContent = "Hide Included Value Breakdown";
+                icon.classList.add("rotate-180");
+            }
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const downSlider = document.getElementById('downSlider');
+            const installmentPlan = document.getElementById('installmentPlan');
+            const trimSelect = document.getElementById('trimSelect');
+            const modalTitle = document.getElementById('modalTitle');
+
+            if (downSlider && installmentPlan && trimSelect && modalTitle) {
+                downSlider.addEventListener('input', () => {
+                    const plan = installmentPlan.value;
+                    const trimIndex = trimSelect.value;
+                    const model = modalTitle.textContent
+                        .split("–")[0]
+                        .trim()
+                        .replace("Order H2X ", "")
+                        .toLowerCase();
+
+                    const trim = carData[model]?.trims[parseInt(trimIndex)];
+                    if (!trim) return; // failsafe if data missing
+
+                    let interestRate = 0;
+                    if (plan === '24') interestRate = 0.05;
+                    if (plan === '36') interestRate = 0.10;
+                    const months = plan === 'full' ? 0 : parseInt(plan);
+
+                    updateDealershipBreakdown(trim.price, months, interestRate);
+                });
+            }
+        });
 
         const engineSounds = {};
         let currentPlayingModel = null;
@@ -1157,6 +1413,53 @@
             showToast(message);
             closeTestDriveModal();
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.model-card');
+            const hiddenInput = document.getElementById('selectedModel');
+
+            cards.forEach(card => {
+                card.addEventListener('click', () => {
+                    cards.forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    hiddenInput.value = card.dataset.model;
+                });
+            });
+        });
+
+        const heroModels = [
+            { name: "Siklab", img: "car-h2x.png" },
+            { name: "Lakbay", img: "car-lakbay.png" },
+            { name: "Bayan", img: "car-bayan.png" },
+            { name: "Ulap", img: "car-ulap.png" },
+        ];
+        let heroIndex = 0;
+
+        function updateHeroModel() {
+            const modelName = document.getElementById("modelName");
+            const modelImage = document.getElementById("modelHeroImage");
+            const selectedModel = document.getElementById("selectedModel");
+
+            modelImage.style.opacity = 0; // fade out first
+            setTimeout(() => {
+                modelName.innerText = heroModels[heroIndex].name;
+                modelImage.src = heroModels[heroIndex].img;
+                selectedModel.value = heroModels[heroIndex].name;
+                // fade in happens on image load via onload
+            }, 250);
+        }
+
+        function nextModel() {
+            heroIndex = (heroIndex + 1) % heroModels.length;
+            updateHeroModel();
+        }
+
+        function prevModel() {
+            heroIndex = (heroIndex - 1 + heroModels.length) % heroModels.length;
+            updateHeroModel();
+        }
+
+        document.addEventListener("DOMContentLoaded", updateHeroModel);
     </script>
 
 </body>
